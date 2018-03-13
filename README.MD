@@ -140,3 +140,14 @@ public class AfterRequestScript implements AfterRequest {
 }
 
 ```
+
+##### 支持异步，且异步目前通过NIO实现,目前异步实现的时候需要注意,Future<T> 泛型中的T不能为空或者是?，即必须要有正常的类型作为泛型
+```java
+@HttpComponent
+public interface HttpTestInterface {
+
+    //只需要设置返回值为Future类型，自动识别为异步调用
+    @HttpRequest("https://www.baidu.com")
+    Future<String> asyncVisitBaidu();
+}
+```
