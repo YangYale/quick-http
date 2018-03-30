@@ -2,9 +2,12 @@ package com.ipet.http.metadata;
 
 import com.ipet.http.AfterRequest;
 import com.ipet.http.PreRequest;
+import com.ipet.http.annotation.HttpComponent;
 import com.ipet.http.annotation.HttpRequest;
 import com.ipet.http.enums.BodyType;
 import com.ipet.http.enums.HttpMethod;
+import com.ipet.http.utils.HttpUtils;
+import com.ipet.http.utils.UrlPropertyResolveUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.Charset;
@@ -27,8 +30,19 @@ public class RequestMetadata {
     private Charset charset;
     private int bufferSize;
 
-    public RequestMetadata(HttpRequest httpRequest){
-        this.setUrl(StringUtils.isNotBlank(httpRequest.value()) ? httpRequest.value() : httpRequest.url());
+    public RequestMetadata(HttpRequest httpRequest,HttpComponent httpComponent) throws Exception {
+        String tagUrl = StringUtils.isNotBlank(httpRequest.value()) ? httpRequest.value() : httpRequest.url();
+        if(StringUtils.isNotBlank(tagUrl)){
+            this.setUrl(UrlPropertyResolveUtil.resolveProperty(tagUrl));
+        }else{
+            if(StringUtils.isBlank(httpComponent.value()) && StringUtils.isBlank(httpComponent.host())){
+                throw new Exception("Http Interface url is Empty, Http Configuration Error,please check your Http Configuration");
+            }
+            this.setUrl(HttpUtils.concatHostWithPath(
+                    UrlPropertyResolveUtil.resolveProperty(StringUtils.isNotBlank(httpComponent.value()) ? httpComponent.value() : httpComponent.host()),
+                    UrlPropertyResolveUtil.resolveProperty(httpRequest.path())
+            ));
+        }
         this.setMethod(httpRequest.method());
         this.setBodyType(httpRequest.body());
         this.setCertification(httpRequest.certification());

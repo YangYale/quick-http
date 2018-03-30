@@ -12,4 +12,19 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HttpComponent {
+    /**
+     * 请求host，可不指定，由method提供全路径，指定时method需要配置path,与host二选一
+     * 可用${}注入
+     * @return
+     * @see HttpRequest
+     */
+    String value() default "";
+
+    /**
+     * 请求host，可不指定，由method提供全路径，指定时method需要配置path,与value二选一
+     * 可用${}注入
+     * @return
+     * @see HttpRequest
+     */
+    String host() default "";
 }

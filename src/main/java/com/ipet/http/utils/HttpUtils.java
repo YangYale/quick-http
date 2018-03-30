@@ -29,6 +29,8 @@ import java.util.stream.Collectors;
  */
 public class HttpUtils {
 
+    private static final String LEFT_SLASH = "/";
+
     public static HttpUri fromUrl(String url) throws Exception{
         if(StringUtils.isBlank(url)){
             throw new Exception("HttpUtils.fromUrl The url is blank.");
@@ -113,5 +115,15 @@ public class HttpUtils {
                 return new UrlEncodedFormEntity(requestParamMetadataList.stream().map(v->new BasicNameValuePair(v.getParamName(),v.getParamValue().toString())).collect(Collectors.toList()),charset);
         }
         return null;
+    }
+
+    public static String concatHostWithPath(String host,String path){
+        if(host.endsWith(LEFT_SLASH)&&path.startsWith(LEFT_SLASH)){
+            return host + path.substring(1);
+        }else if(!host.endsWith(LEFT_SLASH) && !path.startsWith(LEFT_SLASH)){
+            return host + LEFT_SLASH + path;
+        }else{
+            return host + path;
+        }
     }
 }

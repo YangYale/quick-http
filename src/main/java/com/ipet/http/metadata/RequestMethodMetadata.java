@@ -58,7 +58,8 @@ public class RequestMethodMetadata {
     private void initialRequestMetadata(Method method, Object[] args) throws Exception{
         if(method.getDeclaringClass().isAnnotationPresent(HttpComponent.class) && method.isAnnotationPresent(HttpRequest.class)){
             HttpRequest httpRequest = method.getDeclaredAnnotation(HttpRequest.class);
-            this.requestMetadata = new RequestMetadata(httpRequest);
+            HttpComponent httpComponent = method.getDeclaringClass().getDeclaredAnnotation(HttpComponent.class);
+            this.requestMetadata = new RequestMetadata(httpRequest,httpComponent);
             if(method.getReturnType().equals(Future.class)){
                 this.requestMetadata.setAsync(true);
                 this.returnClassType = Class.forName(((ParameterizedType)method.getGenericReturnType()).getActualTypeArguments()[0].getTypeName());

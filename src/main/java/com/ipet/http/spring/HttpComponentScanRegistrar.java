@@ -1,9 +1,12 @@
 package com.ipet.http.spring;
 
+import com.ipet.http.enviroment.EnvironmentManager;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.core.env.Environment;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.StringUtils;
@@ -16,7 +19,7 @@ import java.util.List;
  *         <p>
  *         2018/3/5 14:04
  */
-public class HttpComponentScanRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware {
+public class HttpComponentScanRegistrar implements ImportBeanDefinitionRegistrar, ResourceLoaderAware,EnvironmentAware {
     private ResourceLoader resourceLoader;
     @Override
     public void setResourceLoader(ResourceLoader resourceLoader) {
@@ -45,5 +48,10 @@ public class HttpComponentScanRegistrar implements ImportBeanDefinitionRegistrar
             }
         }
         httpComponentScanner.doScan(StringUtils.toStringArray(packages));
+    }
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        EnvironmentManager.INSTANCE.setEnv(environment);
     }
 }

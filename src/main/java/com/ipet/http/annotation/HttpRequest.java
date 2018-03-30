@@ -22,16 +22,28 @@ import java.lang.annotation.*;
 public @interface HttpRequest {
 
     /**
-     * 请求链接(与url二选一)
+     * 请求链接(与url二选一) 当value或url二者有值时，优先使用二者的路径做请求；反之，则通过host+path的方式拼接
+     * 可通过${}注入
      * @return
+     * @see HttpComponent
      */
     String value() default "";
 
     /**
-     * 请求链接(与value二选一)
+     * 请求链接(与value二选一) 当value或url二者有值时，优先使用二者的路径做请求；反之，则通过host+path的方式拼接
+     * 可通过${}注入
      * @return
+     * @see HttpComponent
      */
     String url() default "";
+
+    /**
+     * 请求uri，当value与url均未设置时，可通过此值设置请求uri，请求路径通过host+path拼接
+     * 可通过${}注入
+     * @return
+     * @see HttpComponent
+     */
+    String path() default "";
 
     /**
      * 请求方式

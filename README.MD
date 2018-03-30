@@ -151,3 +151,27 @@ public interface HttpTestInterface {
     Future<String> asyncVisitBaidu();
 }
 ```
+
+### version 1.1
+#### 支持properties属性注入
+
+```properties
+qq.url=http://www.qq.com
+```
+```java
+@HttpComponent
+public interface HttpTestInterface {
+
+    //http request 声明
+    @HttpRequest(value = "${qq.url}",header = @Header(key = "Content-Type",value = "text/html"))
+    String visitQQ();
+}
+
+@HttpComponent("${qq.url}")
+public interface HttpTestInterface {
+
+    //http request 声明
+    @HttpRequest(header = @Header(key = "Content-Type",value = "text/html"))
+    String visitQQ();
+}
+```
