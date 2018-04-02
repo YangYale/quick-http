@@ -1,5 +1,6 @@
 package com.ipet.http.enums;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.entity.ContentType;
 
 import java.nio.charset.Charset;
@@ -64,8 +65,9 @@ public enum BodyType {
     }
 
     public static BodyType toBodyType(String _value){
+        if(StringUtils.isBlank(_value)) return BodyType.DEFAULT;
         for (int i = 0; i < BodyType.values().length; i++) {
-            if(BodyType.values()[i].value.equalsIgnoreCase(_value)){
+            if(BodyType.values()[i].value.equalsIgnoreCase(_value) || _value.contains(BodyType.values()[i].value)){
                 return BodyType.values()[i];
             }
         }
