@@ -21,7 +21,7 @@ public class ResponseParserFactory {
             case RAW_TEXT_PLAIN:
             case RAW_XML_APPLICATION: return (IResponseParser<T>) new StringResponseParser();
             case BINARY: return (IResponseParser<T>) new InputStreamResponseParser();
-            case RAW_JSON: return new JsonResponseParser<>();
+            case RAW_JSON: return new JsonResponseParser<T>();
         }
         return null;
     }

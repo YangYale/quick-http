@@ -2,6 +2,7 @@ package com.ipet.http.response;
 
 import org.apache.http.HttpEntity;
 
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
@@ -17,5 +18,5 @@ public interface IResponseParser<T> {
      * @return
      * @throws Exception
      */
-    T parse(HttpEntity httpEntity, Charset charset, Class<?> returnType) throws Exception;
+    T parse(HttpEntity httpEntity, Charset charset, Type returnType) throws Exception;
 }

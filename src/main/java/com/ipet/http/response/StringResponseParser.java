@@ -3,6 +3,7 @@ package com.ipet.http.response;
 import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
@@ -13,7 +14,7 @@ import java.nio.charset.Charset;
 public class StringResponseParser implements IResponseParser<String> {
 
     @Override
-    public String parse(HttpEntity httpEntity, Charset charset, Class<?> returnType) throws Exception {
+    public String parse(HttpEntity httpEntity, Charset charset, Type returnType) throws Exception {
         //字符串数据转化
         if(!String.class.equals(returnType)){
             throw new Exception("Http Response Parse Error, return type is not a 'String' , please check your interface defination.");

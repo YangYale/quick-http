@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
@@ -26,7 +27,7 @@ public class RequestMethodMetadata {
     private Object[] args;
     private List<RequestParamMetadata> requestParamMetadataList;
     private RequestMetadata requestMetadata;
-    private Class<?> returnClassType;
+    private Type returnClassType;
 
     public RequestMethodMetadata(Method method, Object[] args) throws Exception {
         this.method = method;
@@ -47,7 +48,7 @@ public class RequestMethodMetadata {
         return requestMetadata;
     }
 
-    public Class<?> getReturnClassType() {
+    public Type getReturnClassType() {
         return returnClassType;
     }
 
@@ -62,9 +63,9 @@ public class RequestMethodMetadata {
             this.requestMetadata = new RequestMetadata(httpRequest,httpComponent);
             if(method.getReturnType().equals(Future.class)){
                 this.requestMetadata.setAsync(true);
-                this.returnClassType = Class.forName(((ParameterizedType)method.getGenericReturnType()).getActualTypeArguments()[0].getTypeName());
+                this.returnClassType = ((ParameterizedType)method.getGenericReturnType()).getActualTypeArguments()[0];
             }else{
-                this.returnClassType = method.getReturnType();
+                this.returnClassType = method.getGenericReturnType();
             }
             //参数中附带的header
             for (int i = 0; i < method.getParameters().length; i++) {

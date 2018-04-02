@@ -6,6 +6,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
@@ -15,11 +16,8 @@ import java.nio.charset.Charset;
  */
 public class JsonResponseParser<T> implements IResponseParser<T> {
     @Override
-    public T parse(HttpEntity httpEntity, Charset charset, Class<?> returnType) throws Exception {
+    public T parse(HttpEntity httpEntity, Charset charset, Type returnType) throws Exception {
         // json格式数据转化
-        if(!((ParameterizedType)this.getClass().getGenericSuperclass()).getActualTypeArguments()[0].getClass().equals(returnType)){
-            throw new Exception("Http Response Parse Error, return type is not a '" + returnType.getName() + "' , please check your interface defination.");
-        }
         return JSON.parseObject(EntityUtils.toString(httpEntity,charset),new TypeReference<T>(){});
     }
 }

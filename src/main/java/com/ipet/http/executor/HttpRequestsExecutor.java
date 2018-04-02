@@ -2,6 +2,7 @@ package com.ipet.http.executor;
 
 import com.ipet.http.enums.BodyType;
 import com.ipet.http.exception.RequestException;
+import com.ipet.http.response.IResponseParser;
 import com.ipet.http.response.ResponseParserFactory;
 import com.ipet.http.utils.HttpUri;
 import org.apache.commons.lang3.StringUtils;
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.*;
 import java.io.File;
+import java.lang.reflect.Type;
 import java.net.Socket;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -132,7 +134,7 @@ public class HttpRequestsExecutor {
                                                         HttpUri httpUri,
                                                         String certification,
                                                         ConnectionConfig connectionConfig,
-                                                        Class<?> resultType) throws Exception {
+                                                        Type resultType) throws Exception {
         final HttpProcessor httpProcessor = HttpProcessorBuilder.create().add(new RequestContent())
                 .add(new RequestTargetHost())
                 .add(new RequestConnControl())
@@ -148,9 +150,9 @@ public class HttpRequestsExecutor {
             httpRequestExecutor.postProcess(httpResponse,httpProcessor,httpCoreContext);
             logger.info(" << Response: {}",httpResponse.getStatusLine());
             if(httpResponse.getStatusLine().getStatusCode() >= 200 && httpResponse.getStatusLine().getStatusCode() < 300){
-                return (R) ResponseParserFactory.Builder.INSTANCE.build().
-                        create(BodyType.toBodyType(httpResponse.getEntity().getContentType().getValue())).
-                        parse(httpResponse.getEntity(),connectionConfig.getCharset(),resultType);
+                IResponseParser<R> responseParser = ResponseParserFactory.Builder.INSTANCE.build().
+                        create(BodyType.toBodyType(httpResponse.getEntity().getContentType().getValue()));
+                return responseParser.parse(httpResponse.getEntity(),connectionConfig.getCharset(), resultType);
             }else{
                 throw new RequestException(httpResponse.getStatusLine().getStatusCode());
             }
@@ -174,7 +176,7 @@ public class HttpRequestsExecutor {
                                                                      HttpUri httpUri,
                                                                      String certification,
                                                                      ConnectionConfig connectionConfig,
-                                                                     Class<?> resultType) throws Exception{
+                                                                     Type resultType) throws Exception{
         final HttpProcessor httpProcessor = HttpProcessorBuilder.create().add(new RequestContent())
                 .add(new RequestTargetHost())
                 .add(new RequestConnControl())
@@ -212,9 +214,9 @@ public class HttpRequestsExecutor {
             logger.info("Shutting down I/O reactor.");
             connectingIOReactor.shutdown();
             if(httpResponse.getStatusLine().getStatusCode() >= 200 && httpResponse.getStatusLine().getStatusCode() < 300){
-                return (R) ResponseParserFactory.Builder.INSTANCE.build().
-                        create(BodyType.toBodyType(httpResponse.getEntity().getContentType().getValue())).
-                        parse(httpResponse.getEntity(),connectionConfig.getCharset(),resultType);
+                IResponseParser<R> responseParser = ResponseParserFactory.Builder.INSTANCE.build().
+                        create(BodyType.toBodyType(httpResponse.getEntity().getContentType().getValue()));
+                return responseParser.parse(httpResponse.getEntity(),connectionConfig.getCharset(), resultType);
             }else{
                 throw new RequestException(httpResponse.getStatusLine().getStatusCode());
             }

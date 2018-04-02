@@ -5,6 +5,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.nio.charset.Charset;
 
 /**
@@ -14,7 +15,7 @@ import java.nio.charset.Charset;
  */
 public class InputStreamResponseParser implements IResponseParser<InputStream> {
     @Override
-    public InputStream parse(HttpEntity httpEntity, Charset charset, Class<?> returnType) throws Exception {
+    public InputStream parse(HttpEntity httpEntity, Charset charset, Type returnType) throws Exception {
         // 文件数据转化
         if(!InputStream.class.equals(returnType)){
             throw new Exception("Http Response Parse Error, return type is not a 'InputStream' , please check your interface defination.");

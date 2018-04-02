@@ -67,7 +67,7 @@ public enum BodyType {
     public static BodyType toBodyType(String _value){
         if(StringUtils.isBlank(_value)) return BodyType.DEFAULT;
         for (int i = 0; i < BodyType.values().length; i++) {
-            if(BodyType.values()[i].value.equalsIgnoreCase(_value) || _value.contains(BodyType.values()[i].value)){
+            if((BodyType.values()[i].value.equalsIgnoreCase(_value) || _value.contains(BodyType.values()[i].value) && BodyType.values()[i] != BodyType.DEFAULT)){
                 return BodyType.values()[i];
             }
         }
